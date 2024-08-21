@@ -8,9 +8,8 @@ pygame.init()
 # SCREEN_WIDTH, SCREEN_HEIGHT = 800, 400
 
 GRAVITY = 2
-JUMP_STRENGTH = -20
-SNAIL_SPEED = 5
 
+game_active=1
 # Set up the screen
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
@@ -29,6 +28,9 @@ snail_rect = snail.get_rect(midbottom=(800- 100, 300 ))
 player = pygame.image.load('graphics/player/player_walk_1.png').convert_alpha()
 player_rect = player.get_rect(midbottom=(80, 300))
 
+menu=font.render('Restart Game ? [Y/N]', True, (64, 64, 64))
+menu_rect=menu.get_rect(center=(400,200))
+
 # Game variables
 gravity = 0
 
@@ -39,15 +41,35 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if player_rect.bottom == 300:
-                   gravity = -30
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if player_rect.collidepoint(event.pos):
-                if player_rect.bottom == 300:
-                    gravity = -30
+        if game_active: 
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if player_rect.bottom == 300:
+                      gravity=-35  
+
+            
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if player_rect.collidepoint(event.pos):
+                    if player_rect.bottom == 300:
+                        gravity = -30
+
+        if game_active==False:
+             
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    game_active=True
+                    snail_rect.x=600
+                    player_rect.y=300
+                    gravity=0
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_n: 
+                    pygame.quit()   
+                    exit()    
+
     # Update game state
     gravity += GRAVITY
     player_rect.y += gravity
@@ -55,22 +77,32 @@ while True:
     # Check player falling below ground
     if player_rect.bottom > 300:
         player_rect.bottom = 300
-        gravity = 0  # Reset gravity when player is on the ground
+        gravity = 0  
 
     # Update snail position
-    snail_rect.left -= SNAIL_SPEED
+    snail_rect.left -= 5
     if snail_rect.right < 0:
         snail_rect.left = 800
 
     # Drawing
-    screen.blit(sky, (0, 0))
-    screen.blit(ground, (0, 300))
-    pygame.draw.rect(screen, '#c0e8ec', text_rect)
-    pygame.draw.rect(screen, '#c0e8ec', text_rect, 10)
-    screen.blit(text, text_rect)
-    screen.blit(player, player_rect)
-    screen.blit(snail, snail_rect)
+    if game_active==1:
+
+        screen.blit(sky, (0, 0))
+        screen.blit(ground, (0, 300))
+        pygame.draw.rect(screen, '#c0e8ec', text_rect)
+        pygame.draw.rect(screen, '#c0e8ec', text_rect, 10)
+        screen.blit(text, text_rect)
+        screen.blit(player, player_rect)
+        screen.blit(snail, snail_rect)
+
+        if snail_rect.colliderect(player_rect):
+            game_active=0
+    else:
+       pygame.draw.rect(screen, 'Yellow', menu_rect)
+       pygame.draw.rect(screen, 'Yellow', menu_rect, 10)
+       screen.blit(menu, menu_rect)
 
     # Update display
     pygame.display.update()
     clock.tick(60)
+
