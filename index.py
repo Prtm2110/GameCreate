@@ -42,8 +42,12 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 if player_rect.bottom == 300:
-                    gravity = -30
+                   gravity = -30
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if player_rect.collidepoint(event.pos):
+                if player_rect.bottom == 300:
+                    gravity = -30
     # Update game state
     gravity += GRAVITY
     player_rect.y += gravity

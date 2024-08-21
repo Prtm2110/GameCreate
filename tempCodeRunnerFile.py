@@ -1,5 +1,1 @@
- # if event.type==pygame.MOUSEMOTION:
-    #     mouse=event.pos
-
-    # if player_rect.collidepoint(mouse):
-    #     print('collision')
+ if player_rect.bottom == 300:
