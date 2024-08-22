@@ -1,5 +1,15 @@
 import pygame
 from sys import exit
+def score():
+    current=int(pygame.time.get_ticks()/100)-start
+    score=font.render(f'score: {current}',True,(64,64,64))
+    score_rect=score.get_rect(center=(400,50))
+
+    pygame.draw.rect(score, '#c0e8ec', score_rect)
+    pygame.draw.rect(score, '#c0e8ec', score_rect, 10)
+    screen.blit(score, score_rect)
+
+
 
 # Initialize Pygame
 pygame.init()
@@ -8,6 +18,7 @@ pygame.init()
 # SCREEN_WIDTH, SCREEN_HEIGHT = 800, 400
 
 GRAVITY = 2
+start=0
 
 game_active=1
 # Set up the screen
@@ -31,8 +42,11 @@ player_rect = player.get_rect(midbottom=(80, 300))
 menu=font.render('Restart Game ? [Y/N]', True, (64, 64, 64))
 menu_rect=menu.get_rect(center=(400,200))
 
+
+
 # Game variables
 gravity = 0
+count=1
 
 # Main game loop
 while True:
@@ -41,6 +55,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+
 
         if game_active: 
 
@@ -56,6 +71,9 @@ while True:
                     if player_rect.bottom == 300:
                         gravity = -30
 
+        # if count==1:
+ 
+
         if game_active==False:
              
             if event.type == pygame.KEYDOWN:
@@ -64,6 +82,7 @@ while True:
                     snail_rect.x=600
                     player_rect.y=300
                     gravity=0
+                    start=int(pygame.time.get_ticks()/100)
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_n: 
@@ -86,23 +105,19 @@ while True:
 
     # Drawing
     if game_active==1:
-
+ 
         screen.blit(sky, (0, 0))
         screen.blit(ground, (0, 300))
-        pygame.draw.rect(screen, '#c0e8ec', text_rect)
-        pygame.draw.rect(screen, '#c0e8ec', text_rect, 10)
-        screen.blit(text, text_rect)
         screen.blit(player, player_rect)
         screen.blit(snail, snail_rect)
-
+        score()
         if snail_rect.colliderect(player_rect):
             game_active=0
     else:
        pygame.draw.rect(screen, 'Yellow', menu_rect)
-       pygame.draw.rect(screen, 'Yellow', menu_rect, 10)
+       pygame.draw.rect(screen, 'Yellow', menu_rect, 40)
        screen.blit(menu, menu_rect)
 
     # Update display
     pygame.display.update()
     clock.tick(60)
-
